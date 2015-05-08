@@ -98,8 +98,8 @@ fn run() {
 
 fn get_output(settings: &ProgramSettings) -> Box<Writer> {
     if settings.silent_stdout() {
-        box NullWriter as Box<Writer>
+        Box::new(NullWriter as Box<Writer>)
     } else {
-        box std::io::stdio::stdout() as Box<Writer>
+        Box::new(std::io::stdio::stdout() as Box<Writer>)
     }
 }

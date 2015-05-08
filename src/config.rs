@@ -13,7 +13,7 @@ use std::os;
 
 use clap::{App, Arg, ArgMatches};
 
-#[deriving(Clone)]
+#[derive(Copy, Clone)]
 pub struct ProgramSettings {
     pub threads: uint,
     pub dir: Path,
@@ -186,7 +186,7 @@ fn dir_arg(arg: Option<&str>) -> Path {
     let dir = arg.map_or( os::get_cwd(), |path| Path::new(path) );
 
     if !dir.is_dir() {
-        println!("'{}' is not a valid directory: {}", arg.unwrap_or(""));
+        println!("'{}' is not a valid directory", arg.unwrap_or(""));
         std::process::exit(1);
     }
 

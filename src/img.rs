@@ -7,7 +7,7 @@ use std::io::IoResult;
 use std::mem;
 use std::path::Path;
 
-#[deriving(Eq, PartialEq, Clone)]
+#[derive(Eq, PartialEq, Copy, Clone)]
 pub struct Image {
     pub path: Path,
     pub hash: ImageHash,
@@ -23,7 +23,7 @@ impl Image {
             hash: hash,
             width: width,
             height: height,
-        } 
+        }
     }
 
     fn relative_path(&self, relative_to: &Path) -> Path {
@@ -55,11 +55,11 @@ impl UniqueImage {
            similars: Vec::new(),
         }
     }
-    
+
     pub fn is_similar(&self, img: &Image, thresh: f32) -> bool {
         self.img.hash.dist_ratio(&img.hash) < thresh
     }
- 
+
     pub fn add_similar(&mut self, img: Image) {
         let dist_ratio = self.img.hash.dist_ratio(&img.hash);
 
@@ -69,17 +69,17 @@ impl UniqueImage {
     pub fn similars(&self) -> Vec<SimilarImage> {
         let mut temp = self.similars.clone();
         temp.sort();
-        temp    
+        temp
     }
 
     pub fn write_self(&self, out: &mut Writer, relative_to: &Path) -> IoResult<()> {
-        try!(writeln!(out, "Original: ({}x{}) {} ", 
+        try!(writeln!(out, "Original: ({}x{}) {} ",
                     self.img.width, self.img.height,
                     self.img.relative_path(relative_to).display()
                 ));
-        
+
         try!(out.write_line("Similars [% different]:"));
-    
+
         for similar in self.similars().iter() {
             try!(similar.write_self(out, relative_to));
         }
@@ -105,14 +105,14 @@ impl UniqueImage {
             let dist_ratio = self.img.hash.dist_ratio(&similar.img.hash);
             similar.dist_ratio = dist_ratio;
         }
-        
+
         self.similars.sort()
-    } 
+    }
 }
 
-#[deriving(PartialEq, Clone)]
+#[derive(PartialEq, Copy, Clone)]
 pub struct SimilarImage {
-   pub img: Image, 
+   pub img: Image,
    // Distance from the containing UniqueImage
    pub dist_ratio: f32,
 }
@@ -145,15 +145,14 @@ impl SimilarImage {
 
 impl Ord for SimilarImage {
     fn cmp(&self, other: &SimilarImage) -> Ordering {
-        self.partial_cmp(other).unwrap_or(Equal)   
+        self.partial_cmp(other).unwrap_or(Equal)
     }
 }
 
 impl PartialOrd for SimilarImage {
     fn partial_cmp(&self, other: &SimilarImage) -> Option<Ordering> {
-        self.dist_ratio.partial_cmp(&other.dist_ratio)                    
-    }    
+        self.dist_ratio.partial_cmp(&other.dist_ratio)
+    }
 }
 
 impl Eq for SimilarImage {}
-

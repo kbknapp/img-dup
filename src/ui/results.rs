@@ -5,10 +5,9 @@ use ui::running::Results;
 use ui::util::{FormatBytes, ImgLoader, print_err};
 
 use ui::graphics::{
-	mod,
 	BackEnd, 
-	Context, 
-	ImageSize, 
+	Context,
+	ImageSize,
 	RelativeTransform,
 };
 use ui::opengl_graphics::Texture;
@@ -26,7 +25,7 @@ use std::io::fs;
 use std::mem;
 use std::sync::Arc;
 
-pub fn show_results(results: Results) -> bool {  
+pub fn show_results(results: Results) -> bool {
     let ref consts = Constants {
         avg_load: results.avg_load,
         avg_hash: results.avg_hash,
@@ -48,7 +47,7 @@ pub fn show_results(results: Results) -> bool {
 		Some(state) => state,
 		None => return scan_again(),
     };
-	
+
     for event in events {
 		if state.exit { return scan_again(); }
 
@@ -63,9 +62,9 @@ pub fn show_results(results: Results) -> bool {
 			_ => (),
 		}
 	}
-    
+
     // User clicked exit
-    false	
+    false
 }
 
 // Draw the message on a single frame, then return.
@@ -84,14 +83,14 @@ fn draw_loading_message(gl: &mut Gl, uic: &mut UiContext, events: &mut UiEvents)
                     uic.label("Loading results, please wait...")
                         .position(360.0, 324.0)
                         .size(24)
-                        .draw(gl);                 
+                        .draw(gl);
                 });
 
                 drawn = true;
 			},
 			_ => (),
 		}
-    }            
+    }
 }
 
 struct Constants {
@@ -113,7 +112,7 @@ struct ResultsState {
     buf: Buffers,
     next_str: String,
 	wait_cursor: Cursor,
-	reg_cursor: Cursor, 
+	reg_cursor: Cursor,
 }
 
 impl ResultsState {
@@ -121,10 +120,10 @@ impl ResultsState {
         match done.pop() {
             Some(current) => {
                 let next = done.pop();
-				
+
 				let wait_cursor = Cursor::from_system(SystemCursor::Wait)
 					.unwrap();
-                // UFCS because waitcursor.set() would try to find an impl for quack::Set::set(). 
+                // UFCS because waitcursor.set() would try to find an impl for quack::Set::set().
 				Cursor::set(&wait_cursor);
 
                 let mut loader = ImgLoader::new();
@@ -137,7 +136,7 @@ impl ResultsState {
                 let mut next_str = String::new();
 
                 fmt_next_str(&mut next_str, done.len(), next.is_some());
-            
+
                 Some(
                     ResultsState {
                         done: done,
@@ -147,7 +146,7 @@ impl ResultsState {
                         compare_select: None,
                         exit: false,
 						buf: buf,
-                        next_str: next_str,						
+                        next_str: next_str,
                         wait_cursor: wait_cursor,
 						reg_cursor: reg_cursor,
 					}
@@ -156,23 +155,23 @@ impl ResultsState {
             None => None,
         }
     }
-       
+
     fn move_to_next(&mut self) {
         self.current = match mem::replace(&mut self.next, self.done.pop()) {
             Some(next) => next,
             _ => {
-				self.exit = true; 
-				return; 
+				self.exit = true;
+				return;
 			},
         };
-                       
+
         self.update_buffers();
 		self.compare_select = None;
         self.preload_next();
     }
 
     fn update_buffers(&mut self) {
-		Cursor::set(&self.wait_cursor); 
+		Cursor::set(&self.wait_cursor);
         self.buf = Buffers::create(&mut self.loader, &self.current, self.next.as_ref());
 		Cursor::set(&self.reg_cursor);
 
@@ -181,7 +180,7 @@ impl ResultsState {
 
     fn promote(&mut self, idx: uint) {
         self.current.promote(idx);
-        mem::swap(&mut self.buf.current, &mut self.buf.compares[idx]); 
+        mem::swap(&mut self.buf.current, &mut self.buf.compares[idx]);
     }
 
 	fn delete(&mut self, idx: uint) {
@@ -198,33 +197,33 @@ impl ResultsState {
             );
 		}
 
-		self.remove_compare(idx);	
+		self.remove_compare(idx);
 	}
 
 	fn remove_compare(&mut self, idx: uint) {
 		self.current.similars.remove(idx);
 		self.buf.compares.remove(idx);
 		self.compare_select = None;
-		
+
 		if self.buf.compares.is_empty() {
 			self.move_to_next();
-		}	
+		}
 	}
 
     fn preload_next(&mut self) {
         if let Some(ref next) = self.next {
             for similar in next.similars.iter() {
-                self.loader.begin_load(&similar.img.path);    
-            }     
+                self.loader.begin_load(&similar.img.path);
+            }
         }
-        
+
         // .last() will get ref of result of next .pop()
         if let Some(next_next) = self.done.last() {
             self.loader.begin_load(&next_next.img.path);
-            
+
             for similar in next_next.similars.iter() {
                 self.loader.begin_load(&similar.img.path);
-            }                
+            }
         }
     }
 }
@@ -232,7 +231,7 @@ impl ResultsState {
 #[inline]
 fn fmt_next_str(s: &mut String, remaining: uint, add_one: bool) {
     s.clear();
-    write_str!(s, "Next ({} left)", remaining + if add_one { 1 } else { 0 });    
+    write_str!(s, "Next ({} left)", remaining + if add_one { 1 } else { 0 });
 }
 
 struct Buffers {
@@ -253,16 +252,16 @@ impl Buffers {
                 .map(|similar| ImageBuf::load(loader, &similar.img.path, similar.dist_ratio).unwrap())
                 .collect(),
         }
-    }    
+    }
 }
 
 fn draw_results_ui(
-    gl: &mut Gl, ctx: &Context, 
-    uic: &mut UiContext, 
+    gl: &mut Gl, ctx: &Context,
+    uic: &mut UiContext,
     state: &mut ResultsState, consts: &Constants
 ) {
     background(gl, uic);
-	
+
 	uic.label(&*state.next_str)
 		.position(5.0, 5.0)
 		.size(18)
@@ -281,7 +280,7 @@ fn draw_results_ui(
 		.label_color(Color::white())
 		.callback(
             || if state.buf.preview_next.is_some() && confirm_skip() {
-				state.move_to_next(); 
+				state.move_to_next();
 			}
 		)
 		.draw(gl);
@@ -310,7 +309,7 @@ fn draw_results_ui(
         .position(AVGS_X + 300.0, 5.0)
         .size(18)
         .draw(gl);
-    
+
     const VIEW_ERRORS: u64 = NEXT + 1;
     uic.button(VIEW_ERRORS)
         .position(869.0, 20.0)
@@ -330,8 +329,8 @@ fn draw_results_ui(
         .draw(gl);
 
 	const IMG_SIZE: [f64; 2] = [500.0, 660.0];
-    const IMG_Y: f64 = 115.0;	
- 
+    const IMG_Y: f64 = 115.0;
+
 	{
 		let ref current = state.buf.current;
 		current.draw([5.0, IMG_Y], IMG_SIZE, gl, ctx);
@@ -351,8 +350,8 @@ fn draw_results_ui(
 	const SHRINK_COMPARE: u64 = SCAN_AGAIN + 1;
 
 	if let Some(idx) = state.compare_select {
-		if idx >= state.buf.compares.len() { 
-			state.compare_select = None; 
+		if idx >= state.buf.compares.len() {
+			state.compare_select = None;
 		} else {
 			uic.button(SHRINK_COMPARE)
 				.color(Color::black())
@@ -432,14 +431,14 @@ fn draw_results_ui(
 				let idx = y * COLS + x;
 
 				if idx >= state.buf.compares.len() { return; }
-		
+
 				uic.button(id as u64 + 30)
 					.color(Color::black())
 					.point(pt)
 					.dim(dim)
 					.callback(|| state.compare_select = Some(idx))
 					.draw(gl);
-					 
+
 				let ref similar = state.buf.compares[idx];
 
 				similar.draw(pt, dim, gl, ctx);
@@ -462,7 +461,7 @@ fn draw_results_ui(
 					.draw(gl);
 			});
 	}
-} 
+}
 
 struct ImageBuf {
     image: Texture,
@@ -474,7 +473,7 @@ struct ImageBuf {
 impl ImageBuf {
     fn load(loader: &mut ImgLoader, path: &Path, percent: f32) -> ImageResult<ImageBuf> {
         let image = try!(loader.get_result(path));
-        Ok(ImageBuf::from_image(path, image, percent))   
+        Ok(ImageBuf::from_image(path, image, percent))
     }
 
     fn from_image(path: &Path, image: RgbaImage, percent: f32) -> ImageBuf {
@@ -485,9 +484,9 @@ impl ImageBuf {
         let size = format!("{} x {} ({})", width, height, FormatBytes(file_size));
 
 		let percent = format!("Diff: {:.02}%", percent * 100.0);
- 
+
         let tex = Texture::from_image(&image);
-         
+
         ImageBuf {
             image: tex,
             name: name,
@@ -498,18 +497,18 @@ impl ImageBuf {
 
 
     fn draw(
-		&self, 
-		pos: [f64; 2], size: [f64; 2], 
+		&self,
+		pos: [f64; 2], size: [f64; 2],
 		gl: &mut Gl, ctx: &Context,
 	) {
 		let (width, height) = self.image.get_size();
-		
+
 		let scale = if (width as f64 - size[0]) > (height as f64 - size[1]) {
 			size[0] / (width as f64)
 		} else {
 			size[1] / (height as f64)
 		};
-	
+
 		let ref ctx = ctx.trans(pos[0], pos[1]);
 
 		graphics::Rectangle::new([0.0, 0.0, 0.0, 1.0])
@@ -517,8 +516,8 @@ impl ImageBuf {
 
 		let ref ctx = ctx.zoom(scale);
 
-		graphics::image(&self.image, ctx, gl);		
-    }  
+		graphics::image(&self.image, ctx, gl);
+    }
 }
 
 fn truncate_name(path: &Path, len: uint) -> String {
@@ -531,36 +530,34 @@ fn truncate_name(path: &Path, len: uint) -> String {
 
 	let filestem = path.filestem_str().unwrap_or("");
 
-	if filestem.len() > max_len { 
-			format!("{}{}.{}", filestem.slice_to(trunc_len), TRUNC_STR, ext) 
-	} else { 
+	if filestem.len() > max_len {
+			format!("{}{}.{}", filestem.slice_to(trunc_len), TRUNC_STR, ext)
+	} else {
 		path.filename_display().to_string()
 	}
 }
 
 fn confirm_symlink() -> bool {
     dialogs::confirm(
-        "Symlink image?", 
+        "Symlink image?",
         "Image will be replaced. This cannot be undone!"
-    ) 
+    )
 }
 
 fn confirm_delete() -> bool {
     dialogs::confirm(
         "Delete image permanently?",
         "This cannot be undone!"
-    )  
+    )
 }
 
 fn confirm_skip() -> bool {
     dialogs::confirm(
         "Skip to next image?",
         "You won't be able to go back!"
-    )  
+    )
 }
 
 fn scan_again() -> bool {
-    dialogs::confirm("No matches remaining or found!", "Scan again?")    
+    dialogs::confirm("No matches remaining or found!", "Scan again?")
 }
-
-
