@@ -12,7 +12,10 @@ use std::io::fs::File;
 use std::io::stdio::{stdout, StdWriter};
 use std::io::{IoResult, LineBufferedWriter};
 
-pub fn newline_before_after(out: &mut Writer, what: |&mut Writer| -> IoResult<()>) -> IoResult<()> {
+pub fn newline_before_after<F, W>(out: &mut Writer, what: F)
+                            -> IoResult<()>
+                            where F: FnMut(W) -> IoResult<()>,
+                                  W: Writer {
     try!(out.write_line(""));
     try!(what(out));
     out.write_line("")
@@ -28,10 +31,10 @@ pub fn output_results(settings: &ProgramSettings, results: &Results) -> IoResult
     }
 }
 
-fn json_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) -> IoResult<()> { 
+fn json_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) -> IoResult<()> {
     let output = {
         let mut json = BTreeMap::new();
- 
+
         let dir = &settings.dir;
 
         json_insert!(json, "settings", settings);
@@ -49,7 +52,7 @@ fn json_output(settings: &ProgramSettings, results: &Results, out: &mut Writer) 
 
 fn json_encode(json_config: &JsonSettings, json: Json, out: &mut Writer) -> IoResult<()> {
     match *json_config {
-        JsonSettings::PrettyJson(indent) => { 
+        JsonSettings::PrettyJson(indent) => {
             let ref mut encoder = PrettyEncoder::new(out);
             encoder.set_indent(indent);
             json.encode(encoder)
@@ -68,7 +71,7 @@ fn write_output(settings: &ProgramSettings, results: &Results, out: &mut Writer)
     try!(out.write_line("\nImages:\n"));
     try!(results.write_uniques(out, &settings.dir, settings.dup_only));
     try!(out.write_line("\nErrors:\n"));
-    results.write_errors(out, &settings.dir)    
+    results.write_errors(out, &settings.dir)
 }
 
 fn open_output(settings: &ProgramSettings) -> Either<File, LineBufferedWriter<StdWriter>> {
@@ -98,4 +101,3 @@ impl<T, U> Writer for Either<T, U> where T: Writer, U: Writer {
 pub fn test_outfile(outfile: &Path) -> IoResult<()> {
     File::create(outfile).map(|_| ())
 }
-
