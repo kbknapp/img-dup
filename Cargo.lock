@@ -2,7 +2,7 @@
 name = "img_dup"
 version = "1.0.0"
 dependencies = [
- "clap 0.8.2 (registry+https://github.com/rust-lang/crates.io-index)",
+ "clap 0.8.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "conrod 0.0.10 (git+https://github.com/PistonDevelopers/conrod)",
  "file_dialog 0.0.1 (git+https://github.com/cybergeek94/file_dialog)",
  "img-hash 0.4.0 (git+https://github.com/cybergeek94/img-hash)",
@@ -12,7 +12,7 @@ dependencies = [
 
 [[package]]
 name = "ansi_term"
-version = "0.5.1"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
@@ -22,10 +22,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
 name = "clap"
-version = "0.8.2"
+version = "0.8.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
- "ansi_term 0.5.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "ansi_term 0.5.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "strsim 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
@@ -40,13 +40,13 @@ dependencies = [
 [[package]]
 name = "conrod"
 version = "0.0.10"
-source = "git+https://github.com/PistonDevelopers/conrod#87a31d30c4f18cf6372ab7f3c65266f8269068a8"
+source = "git+https://github.com/PistonDevelopers/conrod#f80870ce3058c750ec5c79a7d12264ee2d6e9376"
 dependencies = [
  "bitflags 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "clock_ticks 0.0.5 (git+https://github.com/tomaka/clock_ticks)",
  "elmesque 0.0.3 (git+https://github.com/mitchmindtree/elmesque)",
  "num 0.1.24 (registry+https://github.com/rust-lang/crates.io-index)",
- "piston 0.1.1 (git+https://github.com/PistonDevelopers/piston/)",
+ "piston 0.1.1 (git+https://github.com/pistondevelopers/piston)",
  "piston2d-graphics 0.0.46 (git+https://github.com/PistonDevelopers/graphics.git)",
  "rand 0.3.8 (registry+https://github.com/rust-lang/crates.io-index)",
  "rustc-serialize 0.3.14 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -127,7 +127,7 @@ dependencies = [
 [[package]]
 name = "interpolation"
 version = "0.0.5"
-source = "git+https://github.com/PistonDevelopers/interpolation#feccc5ae5d2f52df42a3496fd180a0dc2fda50b7"
+source = "git+https://github.com/PistonDevelopers/interpolation#c0c9e970e42a48402514285a5608e4729cf83298"
 
 [[package]]
 name = "khronos_api"
@@ -159,7 +159,7 @@ dependencies = [
 [[package]]
 name = "piston"
 version = "0.1.1"
-source = "git+https://github.com/PistonDevelopers/piston/#e4b588cf22275acb230a4d6baace2567ea66391a"
+source = "git+https://github.com/pistondevelopers/piston#e4b588cf22275acb230a4d6baace2567ea66391a"
 dependencies = [
  "pistoncore-event 0.1.3 (git+https://github.com/pistondevelopers/event)",
  "pistoncore-input 0.0.9 (git+https://github.com/pistondevelopers/input)",
@@ -184,7 +184,7 @@ source = "git+https://github.com/PistonDevelopers/texture#3cc4cddc3f8c51c36ea11d
 [[package]]
 name = "piston-viewport"
 version = "0.0.2"
-source = "git+https://github.com/PistonDevelopers/viewport#3819edeb0982d2552669e03ad9c0317e75340510"
+source = "git+https://github.com/pistondevelopers/viewport#3819edeb0982d2552669e03ad9c0317e75340510"
 dependencies = [
  "piston-float 0.0.1 (git+https://github.com/pistondevelopers/float)",
 ]
@@ -197,7 +197,7 @@ dependencies = [
  "draw_state 0.0.7 (git+https://github.com/gfx-rs/draw_state)",
  "interpolation 0.0.5 (git+https://github.com/PistonDevelopers/interpolation)",
  "piston-texture 0.0.1 (git+https://github.com/PistonDevelopers/texture)",
- "piston-viewport 0.0.2 (git+https://github.com/PistonDevelopers/viewport)",
+ "piston-viewport 0.0.2 (git+https://github.com/pistondevelopers/viewport)",
  "read_color 0.0.2 (git+https://github.com/PistonDevelopers/read_color)",
  "vecmath 0.0.22 (git+https://github.com/PistonDevelopers/vecmath.git)",
 ]
@@ -207,18 +207,18 @@ name = "pistoncore-event"
 version = "0.1.3"
 source = "git+https://github.com/pistondevelopers/event#c51e721f4b346fe7cc8a4c0e2658a70d257202ce"
 dependencies = [
- "pistoncore-event_loop 0.1.4 (git+https://github.com/PistonDevelopers/event_loop)",
+ "pistoncore-event_loop 0.1.5 (git+https://github.com/PistonDevelopers/event_loop)",
  "pistoncore-input 0.0.9 (git+https://github.com/pistondevelopers/input)",
  "pistoncore-window 0.1.2 (git+https://github.com/pistondevelopers/window)",
 ]
 
 [[package]]
 name = "pistoncore-event_loop"
-version = "0.1.4"
-source = "git+https://github.com/PistonDevelopers/event_loop#598cbd12436d835b1eba47074b145a02b219682c"
+version = "0.1.5"
+source = "git+https://github.com/PistonDevelopers/event_loop#d7541e44e33016b0584579e800879120cf982639"
 dependencies = [
  "clock_ticks 0.0.5 (git+https://github.com/tomaka/clock_ticks)",
- "piston-viewport 0.0.2 (git+https://github.com/PistonDevelopers/viewport)",
+ "piston-viewport 0.0.2 (git+https://github.com/pistondevelopers/viewport)",
  "pistoncore-window 0.1.2 (git+https://github.com/pistondevelopers/window)",
 ]
 
@@ -239,7 +239,7 @@ source = "git+https://github.com/PistonDevelopers/sdl2_window#d9dd95cadd5c8de09d
 dependencies = [
  "gl 0.0.12 (git+https://github.com/bjz/gl-rs)",
  "num 0.1.24 (registry+https://github.com/rust-lang/crates.io-index)",
- "piston 0.1.1 (git+https://github.com/PistonDevelopers/piston/)",
+ "piston 0.1.1 (git+https://github.com/pistondevelopers/piston)",
  "sdl2 0.2.3 (git+https://github.com/AngryLawyer/rust-sdl2)",
  "shader_version 0.0.6 (git+https://github.com/pistondevelopers/shader_version)",
 ]

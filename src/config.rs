@@ -1,13 +1,11 @@
 use serialize::json::{ToJson, Json};
 
-use std::borrow::ToOwned;
-
 use std::collections::BTreeMap;
 
-use std::fmt::{Show, Formatter};
+use std::fmt::{Display, Formatter};
 use std::fmt::Result as FormatResult;
 
-use std::io::fs::PathExtensions;
+use std::fs::PathExt;
 
 use std::os;
 

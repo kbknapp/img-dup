@@ -13,10 +13,10 @@ use serialize::json::{ToJson, Json};
 use time::{Tm, now, precise_time_ns};
 
 use std::ascii::AsciiExt;
-use std::boxed::BoxAny;
+use std::any::Any;
 use std::collections::BTreeMap;
-use std::io::IoResult;
-use std::io::fs::PathExtensions;
+use std::io::Result;
+use std::fs::PathExt;
 use std::rt::unwind::try;
 use std::thread::Thread;
 
@@ -279,7 +279,7 @@ pub fn manage_images(images: &mut Vec<UniqueImage>,
 }
 
 pub fn find_images(settings: &ProgramSettings) -> Vec<Path> {
-    use std::io::fs;
+    use std::fs;
 
     let exts: Vec<&str> = settings.exts.iter().map(|string| string.as_slice()).collect();
 

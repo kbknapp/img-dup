@@ -8,9 +8,8 @@ use serialize::json::{Json, PrettyEncoder, ToJson};
 
 use std::collections::BTreeMap;
 
-use std::io::fs::File;
-use std::io::stdio::{stdout, StdWriter};
-use std::io::{IoResult, LineBufferedWriter};
+use std::fs::File;
+use std::io::{Result, LineWriter};
 
 pub fn newline_before_after<F, W>(out: &mut Writer, what: F)
                             -> IoResult<()>
@@ -74,10 +73,10 @@ fn write_output(settings: &ProgramSettings, results: &Results, out: &mut Writer)
     results.write_errors(out, &settings.dir)
 }
 
-fn open_output(settings: &ProgramSettings) -> Either<File, LineBufferedWriter<StdWriter>> {
+fn open_output(settings: &ProgramSettings) -> Either<File, LineWriter<Box<Writer>>> {
     match settings.outfile {
         Some(ref file) => Either::Left(File::create(file).unwrap()),
-        None => Either::Right(stdout()),
+        None => Either::Right(Box::new(stdout()) as Box<Writer>),
     }
 }
 

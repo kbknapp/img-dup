@@ -1,7 +1,7 @@
 #![feature(macro_rules, globs, unsafe_destructor, phase)]
 
-extern crate image;
 extern crate img_hash;
+extern crate image;
 extern crate libc;
 extern crate serialize;
 extern crate time;
@@ -12,8 +12,6 @@ extern crate clap;
 use config::{parse_args, ProgramSettings};
 use output::{output_results, test_outfile};
 use processing::process;
-
-use std::io::util::NullWriter;
 
 use std::os;
 
@@ -98,8 +96,8 @@ fn run() {
 
 fn get_output(settings: &ProgramSettings) -> Box<Writer> {
     if settings.silent_stdout() {
-        Box::new(NullWriter as Box<Writer>)
+        Box::new(std::io::sink() as Box<Writer>)
     } else {
-        Box::new(std::io::stdio::stdout() as Box<Writer>)
+        Box::new(std::io::stdout() as Box<Writer>)
     }
 }

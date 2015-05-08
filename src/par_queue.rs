@@ -1,6 +1,6 @@
 use std::{mem, ptr};
 use std::rt::heap;
-use std::sync::atomic::{AtomicUint, Ordering};
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::sync::Arc;
 
 

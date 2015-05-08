@@ -3,7 +3,7 @@ use img_hash::ImageHash;
 use serialize::json::{Json, ToJson};
 
 use std::collections::BTreeMap;
-use std::io::IoResult;
+use std::io::Result;
 use std::mem;
 use std::path::Path;
 
